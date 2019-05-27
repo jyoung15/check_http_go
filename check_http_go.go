@@ -100,9 +100,11 @@ func main() {
 	if opts.Vhost != "" {
 		host_header = opts.Vhost
 	}
+	if opts.Ssl {
+		scheme = "https"
+	}
 	if opts.Port == 0 {
 		if opts.Ssl {
-			scheme = "https"
 			opts.Port = 443
 		} else {
 			opts.Port = 80
@@ -204,9 +206,10 @@ func main() {
 		// https://reformatcode.com/code/json/taking-a-json-string-unmarshaling-it-into-a-mapstringinterface-editing-and-marshaling-it-into-a-byte-seems-more-complicated-then-it-should-be
 		var d map[string]interface{}
 		json.Unmarshal(buf, &d)
+
 		// https://qiita.com/hnakamur/items/c3560a4b780487ef6065
 		v, _ := dyno.Get(d, s...)
-		if v != opts.JsonValue {
+		if fmt.Sprintf("%v", v) != opts.JsonValue {
 			nagios_status = NagiosCritical
 			result_message = fmt.Sprintf("`%s` is not `%s`", opts.JsonKey, opts.JsonValue)
 		}
