@@ -100,15 +100,16 @@ func main() {
 	if opts.Vhost != "" {
 		host_header = opts.Vhost
 	}
-	if opts.Ssl {
-		scheme = "https"
-	}
 	if opts.Port == 0 {
 		if opts.Ssl {
+			scheme = "https"
 			opts.Port = 443
 		} else {
 			opts.Port = 80
 		}
+	}
+	if opts.Ssl {
+		scheme = "https"
 	}
 
 	// https://golang.org/pkg/crypto/tls/#Config
